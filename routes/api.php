@@ -42,8 +42,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('save-personalization', [PersonalizedController::class, 'savePersonalization']);
 
     // Routes for reminders new
+
+    // Meal Reminders
     Route::post('/meal-reminders', [MealReminderController::class, 'store']);
     Route::get('/meal-reminders', [MealReminderController::class, 'index']);
+    Route::put('/meal-reminders/{id}/toggle', [MealReminderController::class, 'updateToggleValue']);
+
+    // Sleep Reminders
+    Route::post('/sleep-reminders', [SleepReminderController::class, 'store']);
+    Route::get('/sleep-reminders', [SleepReminderController::class, 'index']);
 });
 
 // Return authenticated user

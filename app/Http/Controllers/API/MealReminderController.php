@@ -18,6 +18,7 @@ class MealReminderController extends Controller
             'meal_minute' => 'required|integer|min:0|max:59',
             'meal_frequency' => 'required|integer|in:0,1',
             'meal_delete_state' => 'required|integer|in:0,1',
+            'toggle_value' => 'required|integer|in:0,1', // Tambahkan ini
         ]);
 
         $mealReminder = MealReminder::create([
@@ -27,7 +28,8 @@ class MealReminderController extends Controller
             'meal_minute' => $validated['meal_minute'],
             'meal_frequency' => $validated['meal_frequency'],
             'meal_delete_state' => $validated['meal_delete_state'],
-            'meal_time' => Carbon::now(), // Tambahkan nilai untuk kolom meal_time
+            'toggle_value' => $validated['toggle_value'], // Tambahkan ini
+            'meal_time' => Carbon::now(),
         ]);
 
         return response()->json($mealReminder, 201);
@@ -47,6 +49,7 @@ class MealReminderController extends Controller
             'meal_minute' => 'required|integer|min:0|max:59',
             'meal_frequency' => 'required|integer|in:0,1',
             'meal_delete_state' => 'required|integer|in:0,1',
+            'toggle_value' => 'required|integer|in:0,1', // Tambahkan ini
         ]);
 
         $mealReminder = MealReminder::findOrFail($id);
@@ -61,6 +64,7 @@ class MealReminderController extends Controller
             'meal_minute' => $validated['meal_minute'],
             'meal_frequency' => $validated['meal_frequency'],
             'meal_delete_state' => $validated['meal_delete_state'],
+            'toggle_value' => $validated['toggle_value'], // Tambahkan ini
         ]);
 
         return response()->json($mealReminder, 200);

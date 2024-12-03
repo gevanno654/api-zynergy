@@ -11,8 +11,14 @@ class SleepReminder extends Model
 
     protected $fillable = [
         'user_id',
-        'bedtime',
-        'wake_up_time',
+        'sleep_time',
+        'sleep_name',
+        'sleep_hour',
+        'sleep_minute',
+        'wake_hour',
+        'wake_minute',
+        'sleep_frequency',
+        'toggle_value',
     ];
 
     public function user()

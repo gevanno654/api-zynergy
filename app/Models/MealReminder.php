@@ -17,6 +17,7 @@ class MealReminder extends Model
         'meal_frequency',
         'meal_delete_state',
         'meal_time',
+        'toggle_value', // Tambahkan ini
     ];
 
     public function user()
