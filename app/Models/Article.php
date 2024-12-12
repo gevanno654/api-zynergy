@@ -9,20 +9,10 @@ class Article extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'content', 'interest_id', 'favorite_id', 'disease_id'];
+    protected $fillable = ['title', 'content', 'interest_id', 'is_general', 'image_url'];
 
     public function interest()
     {
         return $this->belongsTo(Interest::class);
-    }
-
-    public function favorite()
-    {
-        return $this->belongsTo(Favorite::class);
-    }
-
-    public function disease()
-    {
-        return $this->belongsTo(Disease::class);
     }
 }

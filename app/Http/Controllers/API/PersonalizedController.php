@@ -9,17 +9,58 @@ use App\Models\Favorite;
 use App\Models\Disease;
 use App\Models\Allergy;
 use App\Models\UserActivity;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class PersonalizedController extends Controller
 {
     /**
+     * Check user personalization data.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkPersonalizationData(Request $request)
+    {
+        $user = Auth::user();
+
+        $hasInterests = $user->interests()->exists();
+        $hasFavorites = $user->favorites()->exists();
+        $hasDiseases = $user->diseases()->exists();
+
+        $hasPersonalizationData = $hasInterests && $hasFavorites && $hasDiseases;
+
+        return response()->json([
+            'success' => true,
+            'has_data' => $hasPersonalizationData,
+        ]);
+    }
+    
+    public function updateGender(Request $request)
+    {
+        $request->validate([
+            'gender' => 'required|in:male,female',
+        ]);
+
+        $user = auth()->user();
+        $user->gender = $request->gender;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Gender updated successfully.',
+            'data' => $user,
+        ]);
+    }
+    
+    /**
      * Store user interests.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
+    
     public function storeInterests(Request $request)
     {
         $validator = Validator::make($request->all(), [

@@ -73,6 +73,25 @@ class SleepReminderController extends Controller
 
         return response()->json($sleepReminder, 200);
     }
+    
+    public function updateToggleValue(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'toggle_value' => 'required|integer|in:0,1',
+        ]);
+
+        $sleepReminder = SleepReminder::findOrFail($id);
+
+        if ($sleepReminder->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $sleepReminder->update([
+            'toggle_value' => $validated['toggle_value'],
+        ]);
+
+        return response()->json($sleepReminder, 200);
+    }
 
     public function destroy($id)
     {

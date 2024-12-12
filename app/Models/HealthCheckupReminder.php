@@ -11,8 +11,14 @@ class HealthCheckupReminder extends Model
 
     protected $fillable = [
         'user_id',
-        'checkup_type',
-        'next_checkup_date',
+        'checkup_name',
+        'checkup_year',
+        'checkup_month',
+        'checkup_date',
+        'checkup_hour',
+        'checkup_minute',
+        'checkup_note',
+        'toggle_value',
     ];
 
     public function user()

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\MealReminder;
+use App\Models\Menu;
+use App\Models\Avoid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -17,7 +19,6 @@ class MealReminderController extends Controller
             'meal_hour' => 'required|integer|min:0|max:23',
             'meal_minute' => 'required|integer|min:0|max:59',
             'meal_frequency' => 'required|integer|in:0,1',
-            'meal_delete_state' => 'required|integer|in:0,1',
             'toggle_value' => 'required|integer|in:0,1', // Tambahkan ini
         ]);
 
@@ -27,7 +28,6 @@ class MealReminderController extends Controller
             'meal_hour' => $validated['meal_hour'],
             'meal_minute' => $validated['meal_minute'],
             'meal_frequency' => $validated['meal_frequency'],
-            'meal_delete_state' => $validated['meal_delete_state'],
             'toggle_value' => $validated['toggle_value'], // Tambahkan ini
             'meal_time' => Carbon::now(),
         ]);
@@ -48,7 +48,6 @@ class MealReminderController extends Controller
             'meal_hour' => 'required|integer|min:0|max:23',
             'meal_minute' => 'required|integer|min:0|max:59',
             'meal_frequency' => 'required|integer|in:0,1',
-            'meal_delete_state' => 'required|integer|in:0,1',
             'toggle_value' => 'required|integer|in:0,1', // Tambahkan ini
         ]);
 
@@ -63,10 +62,28 @@ class MealReminderController extends Controller
             'meal_hour' => $validated['meal_hour'],
             'meal_minute' => $validated['meal_minute'],
             'meal_frequency' => $validated['meal_frequency'],
-            'meal_delete_state' => $validated['meal_delete_state'],
             'toggle_value' => $validated['toggle_value'], // Tambahkan ini
         ]);
 
+        return response()->json($mealReminder, 200);
+    }
+    
+    public function updateToggleValue(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'toggle_value' => 'required|integer|in:0,1',
+        ]);
+    
+        $mealReminder = MealReminder::findOrFail($id);
+    
+        if ($mealReminder->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+    
+        $mealReminder->update([
+            'toggle_value' => $validated['toggle_value'],
+        ]);
+    
         return response()->json($mealReminder, 200);
     }
 
@@ -81,5 +98,36 @@ class MealReminderController extends Controller
         $mealReminder->delete();
 
         return response()->json(['message' => 'Meal reminder deleted successfully'], 200);
+    }
+    
+    public function suggestMenus()
+    {
+        $user = Auth::user();
+
+        // Ambil semua favorite_id yang dipilih oleh user
+        $favoriteIds = $user->favorites->pluck('id')->toArray();
+
+        // Ambil semua allergy_id yang dipilih oleh user
+        $allergyIds = $user->allergies->pluck('id')->toArray();
+
+        // Cari menu yang sesuai dengan favorite_id dan tidak memiliki allergy_id yang sama dengan user
+        $suggestedMenus = Menu::whereIn('favorite_id', $favoriteIds)
+            ->whereNotIn('allergy_id', $allergyIds)
+            ->get();
+
+        return response()->json($suggestedMenus);
+    }
+    
+    public function suggestAvoids()
+    {
+        $user = Auth::user();
+
+        // Ambil semua disease_id yang dipilih oleh user
+        $diseaseIds = $user->diseases->pluck('id')->toArray();
+
+        // Cari avoids yang sesuai dengan disease_id
+        $suggestedAvoids = Avoid::whereIn('disease_id', $diseaseIds)->get();
+
+        return response()->json($suggestedAvoids);
     }
 }
