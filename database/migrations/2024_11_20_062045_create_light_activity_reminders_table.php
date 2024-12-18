@@ -16,9 +16,13 @@ return new class extends Migration
         Schema::create('light_activity_reminders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->string('activity_type');
-            $table->integer('frequency_in_hours');
             $table->timestamps();
+            $table->timestamp('activity_time')->useCurrent();
+            $table->string('activity_name')->nullable();
+            $table->integer('activity_hour')->nullable();
+            $table->integer('activity_minute')->nullable();
+            $table->integer('activity_frequency')->nullable();
+            $table->integer('toggle_value')->nullable();
         });
     }
 

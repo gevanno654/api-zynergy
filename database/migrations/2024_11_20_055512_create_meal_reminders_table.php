@@ -16,10 +16,13 @@ return new class extends Migration
         Schema::create('meal_reminders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->string('meal_time');
-            $table->text('menu_suggestion');
-            $table->text('food_restriction')->nullable();
+            $table->timestamp('meal_time')->useCurrent();
             $table->timestamps();
+            $table->string('meal_name')->nullable();
+            $table->integer('meal_hour')->nullable();
+            $table->integer('meal_minute')->nullable();
+            $table->integer('meal_frequency')->nullable();
+            $table->integer('toggle_value')->nullable();
         });
     }
 
@@ -27,5 +30,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('meal_reminders');
     }
-
 };

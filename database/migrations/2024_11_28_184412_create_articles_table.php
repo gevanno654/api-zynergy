@@ -16,10 +16,11 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('thumbnail')->nullable(); // Menambahkan kolom untuk thumbnail
+            $table->string('image_url')->nullable(); // Menambahkan kolom untuk image_url
             $table->text('content');
             $table->foreignId('interest_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('favorite_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('disease_id')->nullable()->constrained()->onDelete('cascade');
+            $table->boolean('is_general')->default(false); // Menambahkan kolom untuk is_general
             $table->timestamps();
         });
     }

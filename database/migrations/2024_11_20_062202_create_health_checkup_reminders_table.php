@@ -16,9 +16,16 @@ return new class extends Migration
         Schema::create('health_checkup_reminders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->string('checkup_type');
-            $table->date('next_checkup_date');
             $table->timestamps();
+            $table->timestamp('checkup_time')->useCurrent();
+            $table->string('checkup_name')->nullable();
+            $table->integer('checkup_year')->nullable();
+            $table->integer('checkup_month')->nullable();
+            $table->integer('checkup_date')->nullable();
+            $table->integer('checkup_hour')->nullable();
+            $table->integer('checkup_minute')->nullable();
+            $table->string('checkup_note')->nullable();
+            $table->integer('toggle_value')->nullable();
         });
     }
 
